@@ -1,0 +1,77 @@
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "FPSGui"
+gui.Parent = game:GetService("CoreGui")
+
+local fpsLabel = Instance.new("TextLabel")
+fpsLabel.Name = "FPSLabel"
+fpsLabel.Size = UDim2.new(0, 200, 0, 30)
+fpsLabel.Position = UDim2.new(0, 10, 0, 10)
+fpsLabel.BackgroundTransparency = 0.7
+fpsLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+fpsLabel.Font = Enum.Font.SourceSansBold
+fpsLabel.TextColor3 = Color3.new(1, 1, 1)
+fpsLabel.TextStrokeTransparency = 0.5
+fpsLabel.TextSize = 24
+fpsLabel.TextXAlignment = Enum.TextXAlignment.Left
+fpsLabel.Text = "Roki [BETA] | FPS: "
+fpsLabel.Visible = false
+fpsLabel.Parent = gui
+
+
+local lastTime = tick()
+local lastFrames = {}
+local function updateFPSDisplay()
+    local timeNow = tick()
+    local deltaTime = timeNow - lastTime
+    if deltaTime >= 0.5 then
+        local fpsSum = 0
+        local framesCount = #lastFrames
+        for i = 1, framesCount do
+            fpsSum = fpsSum + lastFrames[i]
+        end
+        local fps = math.floor(fpsSum / framesCount)
+        if fps >= 0 then
+            lastFrames = {}
+            lastTime = timeNow
+            fpsLabel.Text = "Roki [BETA] | FPS: " .. fps
+        end
+    end
+end
+
+game:GetService("RunService").Heartbeat:Connect(function()
+    local fps = 1 / game:GetService("RunService").RenderStepped:Wait()
+    if fps > 0 then
+        table.insert(lastFrames, fps)
+    end
+end)
+game:GetService("RunService").Heartbeat:Connect(updateFPSDisplay)
+
+local key = Enum.KeyCode.RightShift
+local isDisplayed = false
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.KeyCode == key and not gameProcessedEvent then
+        isDisplayed = not isDisplayed
+        fpsLabel.Visible = isDisplayed
+    end
+end)
+
+fpsLabel.BorderSizePixel = 0
+fpsLabel.TextScaled = true
+fpsLabel.TextWrapped = true
+fpsLabel.TextTransparency = 0
+fpsLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+fpsLabel.TextStrokeTransparency = 0
+fpsLabel.TextWrapped = true
+fpsLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+fpsLabel.TextColor3 = Color3.new(1, 1, 1)
+fpsLabel.Font = Enum.Font.SourceSansBold
+fpsLabel.TextSize = 24
+fpsLabel.TextXAlignment = Enum.TextXAlignment.Left
+fpsLabel.TextYAlignment = Enum.TextYAlignment.Center
+fpsLabel.Rounded = true
+fpsLabel.TextScaled = true
+fpsLabel.TextWrapped = true
+fpsLabel.TextColor3 = Color3.new(1, 1, 1)
+fpsLabel.BorderColor3 = Color3.fromRGB(0, 0, 100)
